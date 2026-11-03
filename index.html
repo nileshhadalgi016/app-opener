@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opening LinkedIn…</title>
+<meta property="og:title" content="GitHub Universe × Copilot — my LinkedIn post">
+<meta property="og:description" content="Tap to open in the LinkedIn app">
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+       font-family:-apple-system,system-ui,sans-serif;background:#fff;color:#111;text-align:center;padding:16px}
+  a.btn{display:inline-block;margin-top:16px;padding:18px 36px;border-radius:999px;
+        background:#0A66C2;color:#fff;text-decoration:none;font-weight:700;font-size:18px}
+  a.web{display:block;margin-top:20px;color:#666;font-size:14px}
+</style>
+</head>
+<body>
+<div>
+  <p>Tap to open the post in LinkedIn</p>
+  <a class="btn" id="open" href="#">Open in LinkedIn app</a>
+  <a class="web" id="web" href="#">or view it on the web</a>
+</div>
+<script>
+  var ID  = "urn:li:activity:7523468808888725504";
+  var WEB = "https://www.linkedin.com/feed/update/" + ID;
+  var ua  = navigator.userAgent;
+  var app;
+  if (/android/i.test(ua)) {
+    // Android: intent opens the app, falls back to the web post if it isn't installed
+    app = "intent://www.linkedin.com/feed/update/" + ID +
+          "#Intent;scheme=https;package=com.linkedin.android;S.browser_fallback_url=" +
+          encodeURIComponent(WEB) + ";end";
+  } else if (/iphone|ipad|ipod/i.test(ua)) {
+    app = "linkedin://feed/update/" + ID;
+  } else {
+    app = WEB; // desktop: just go to the post
+  }
+  document.getElementById("open").href = app;
+  document.getElementById("web").href = WEB;
+  window.location.href = app;
+  // iPhone: stay on this page so the button is there to tap.
+  // Elsewhere: if the app didn't open, fall back to the web post.
+  if (!/iphone|ipad|ipod/i.test(ua)) {
+    setTimeout(function () { if (!document.hidden) window.location.href = WEB; }, 1800);
+  }
+</script>
+</body>
+</html>
